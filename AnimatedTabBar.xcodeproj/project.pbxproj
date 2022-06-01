@@ -21,9 +21,10 @@
 		F9689B8428168C8600971C82 /* AnimatedTabBarUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9689B8328168C8600971C82 /* AnimatedTabBarUITests.swift */; };
 		F9689B8628168C8600971C82 /* AnimatedTabBarUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9689B8528168C8600971C82 /* AnimatedTabBarUITestsLaunchTests.swift */; };
 		F96A54D928226A5100036AFA /* DeviceList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96A54D828226A5100036AFA /* DeviceList.swift */; };
-		F96A54DB2822896800036AFA /* OnBoardingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96A54DA2822896800036AFA /* OnBoardingScreen.swift */; };
 		F96A54DD28228A5A00036AFA /* OnBoardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96A54DC28228A5A00036AFA /* OnBoardingView.swift */; };
 		F96B936728225AFC00DE791C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F96B936628225AFC00DE791C /* LaunchScreen.storyboard */; };
+		F9887D0628461CEE00A25A96 /* LocationFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9887D0528461CEE00A25A96 /* LocationFormatter.swift */; };
+		F9B26AC12823E74B00C50AC2 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9B26AC02823E74B00C50AC2 /* LoginViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,10 +62,11 @@
 		F9689B8328168C8600971C82 /* AnimatedTabBarUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedTabBarUITests.swift; sourceTree = "<group>"; };
 		F9689B8528168C8600971C82 /* AnimatedTabBarUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedTabBarUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		F96A54D828226A5100036AFA /* DeviceList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceList.swift; sourceTree = "<group>"; };
-		F96A54DA2822896800036AFA /* OnBoardingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingScreen.swift; sourceTree = "<group>"; };
 		F96A54DC28228A5A00036AFA /* OnBoardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingView.swift; sourceTree = "<group>"; };
 		F96B93622822564200DE791C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F96B936628225AFC00DE791C /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F9887D0528461CEE00A25A96 /* LocationFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFormatter.swift; sourceTree = "<group>"; };
+		F9B26AC02823E74B00C50AC2 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,8 +103,8 @@
 				F94F64852816B0D400FD8303 /* ViewTwo.swift */,
 				F94F64872816B0FC00FD8303 /* ViewThree.swift */,
 				F94F64892816B10600FD8303 /* ViewFour.swift */,
-				F96A54DA2822896800036AFA /* OnBoardingScreen.swift */,
 				F96A54DC28228A5A00036AFA /* OnBoardingView.swift */,
+				F9887D0528461CEE00A25A96 /* LocationFormatter.swift */,
 			);
 			name = Home;
 			sourceTree = "<group>";
@@ -136,6 +138,7 @@
 				F94F647E28168D5600FD8303 /* Home */,
 				F9689B6828168C8400971C82 /* AnimatedTabBarApp.swift */,
 				F9689B6A28168C8400971C82 /* ContentView.swift */,
+				F9B26AC02823E74B00C50AC2 /* LoginViewModel.swift */,
 				F9689B6C28168C8500971C82 /* Assets.xcassets */,
 				F9689B6E28168C8500971C82 /* Preview Content */,
 			);
@@ -317,11 +320,12 @@
 				F94F648A2816B10600FD8303 /* ViewFour.swift in Sources */,
 				F94F648228168D9200FD8303 /* CustomTabBar.swift in Sources */,
 				F94F64882816B0FC00FD8303 /* ViewThree.swift in Sources */,
+				F9887D0628461CEE00A25A96 /* LocationFormatter.swift in Sources */,
 				F96A54D928226A5100036AFA /* DeviceList.swift in Sources */,
-				F96A54DB2822896800036AFA /* OnBoardingScreen.swift in Sources */,
 				F96A54DD28228A5A00036AFA /* OnBoardingView.swift in Sources */,
 				F9689B6B28168C8400971C82 /* ContentView.swift in Sources */,
 				F94F648028168D6700FD8303 /* Home.swift in Sources */,
+				F9B26AC12823E74B00C50AC2 /* LoginViewModel.swift in Sources */,
 				F9689B6928168C8400971C82 /* AnimatedTabBarApp.swift in Sources */,
 				F94F64842816AFFA00FD8303 /* ViewOne.swift in Sources */,
 				F94F64862816B0D400FD8303 /* ViewTwo.swift in Sources */,

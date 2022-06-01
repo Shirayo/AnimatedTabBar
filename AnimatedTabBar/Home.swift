@@ -9,7 +9,7 @@ import SwiftUI
 
 struct Home: View {
     
-    @State var selectedTab = "home"
+    @State var selectedTab = "map"
     @State var isAddButtonPressed = false
     
     init() {
@@ -31,12 +31,8 @@ struct Home: View {
             CustomTabBar(selectedTab: $selectedTab, isAddButtonPressed: $isAddButtonPressed)
                 
             .fullScreenCover(isPresented: $isAddButtonPressed) {
-                Button {
-                    print(UIDevice.isPhoneX)
-                    isAddButtonPressed = false
-                } label: {
-                    Text("Add Button pressed")
-                }
+//                OnBoardingView(close: $isAddButtonPressed)
+                LocationFormatter()
             }
         }
     }

@@ -14,9 +14,8 @@ struct BoardingInfo {
 }
 
 struct OnBoardingView: View {
-    
-    private var views = [
-        BoardingInfo(title: "Добро пожаловать!", info: "В самое большое сообщество путешественников и ценителей интересных мест", imageName: "planet"),
+    var views = [
+        BoardingInfo(title: "Добро пожаловать!", info: "В самое большое сообщество путешественников и ценителей интересных мест", imageName: "Saly-44"),
         BoardingInfo(title: "Делитесь!", info: "Рассказывайте окружающим об интересных местах и прикрепляйте фото", imageName: "Saly-2"),
         BoardingInfo(title: "Изучайте", info: "Получите доступ к информации об огромном количестве красивых и интересных мест", imageName: "Saly-1"),
         BoardingInfo(title: "Оценивайте", info: "Поделитесь своим мнением о местах и узнайте мнение других", imageName: "Saly-14"),
@@ -24,33 +23,35 @@ struct OnBoardingView: View {
     ]
     
     @State var selectedPage = 0
-    
+    @Binding var close: Bool
+
     var body: some View {
         TabView(selection: $selectedPage) {
             ForEach(views.indices, id:\.self) { index in
-                VStack(alignment: .leading, spacing: 30) {
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text(views[index].title)
-                            .font(.system(size: 32, weight: .bold))
-                            .foregroundColor(.white)
-                            .multilineTextAlignment(.leading)
-                            .padding(.horizontal, 16)
-                        Text(views[index].info)
-                            .font(.system(size: 24, weight: .regular))
-                            .foregroundColor(.white)
-                            .multilineTextAlignment(.leading)
-                            .padding(.horizontal, 16)
-                        Image(views[index].imageName)
-                            .resizable()
-                            .scaledToFit()
-                            .padding(.top, 36)
-                            .frame(width: UIScreen.main.bounds.width)
-                    }
+                VStack(alignment: .leading, spacing: 16) {
+                    Text(views[index].title)
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 16)
+                        .multilineTextAlignment(.leading)
+                    Text(views[index].info)
+                        .font(.system(size: 20, weight: .regular))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 16)
+                        .multilineTextAlignment(.leading)
+                    Image(views[index].imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: UIScreen.main.bounds.width, height: 340)
+//                        .background(.red)
+//                        .padding(.horizontal)
+//                        .padding(.top, 36)
                     if index == 4 {
                         Spacer()
                         VStack {
                             Button {
                                 print("let's go")
+                                close = false
                             } label: {
                                 ZStack {
                                     Color("Selected")
@@ -58,17 +59,17 @@ struct OnBoardingView: View {
                                     Text("Начать")
                                         .font(.system(size: 17, weight: .regular))
                                         .foregroundColor(.white)
-                                                              
                                 }.cornerRadius(24)
                                     .padding(.horizontal, 16)
-                            }.onTapGesture {
-                                print("change color of button")
                             }
-                        }.padding(.bottom, 48)
+                        }.padding(.bottom, 76)
                     } else {
                         Spacer()
                     }
-                }.tag(index)
+                }
+                .padding(.top, 88)
+                .ignoresSafeArea()
+                .tag(index)
             }
         }
         .background(LinearGradient(colors: [Color("GradientTop"), Color("GradientBottom")], startPoint: .top, endPoint: .bottom).ignoresSafeArea())
@@ -87,16 +88,19 @@ struct OnBoardingView: View {
             .padding(.horizontal, 8)
             .background(Color("PageIndicatorBackground"))
             .cornerRadius(8)
-            .padding(.vertical, UIDevice.isPhoneX ? 0 : 16)
+            .padding(.bottom, 34)
+//            .padding(.vertical, UIDevice.isPhoneX ? 0 : 16)
             ,alignment: .bottom
         )
+        .ignoresSafeArea()
+
     }
     
 }
 
 struct OnBoardingView_Previews: PreviewProvider {
     static var previews: some View {
-        OnBoardingView()
+        OnBoardingView(close: .constant(true))
             .previewDevice("iPhone 13 Pro")
     }
 }

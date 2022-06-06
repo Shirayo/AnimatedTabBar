@@ -24,6 +24,7 @@
 		F96A54DD28228A5A00036AFA /* OnBoardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96A54DC28228A5A00036AFA /* OnBoardingView.swift */; };
 		F96B936728225AFC00DE791C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F96B936628225AFC00DE791C /* LaunchScreen.storyboard */; };
 		F9887D0628461CEE00A25A96 /* LocationFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9887D0528461CEE00A25A96 /* LocationFormatter.swift */; };
+		F9887D0C284DDCB100A25A96 /* PickPlaceLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9887D0B284DDCB100A25A96 /* PickPlaceLocation.swift */; };
 		F9B26AC12823E74B00C50AC2 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9B26AC02823E74B00C50AC2 /* LoginViewModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +67,7 @@
 		F96B93622822564200DE791C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F96B936628225AFC00DE791C /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F9887D0528461CEE00A25A96 /* LocationFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFormatter.swift; sourceTree = "<group>"; };
+		F9887D0B284DDCB100A25A96 /* PickPlaceLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickPlaceLocation.swift; sourceTree = "<group>"; };
 		F9B26AC02823E74B00C50AC2 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,6 +107,7 @@
 				F94F64892816B10600FD8303 /* ViewFour.swift */,
 				F96A54DC28228A5A00036AFA /* OnBoardingView.swift */,
 				F9887D0528461CEE00A25A96 /* LocationFormatter.swift */,
+				F9887D0B284DDCB100A25A96 /* PickPlaceLocation.swift */,
 			);
 			name = Home;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F94F648A2816B10600FD8303 /* ViewFour.swift in Sources */,
+				F9887D0C284DDCB100A25A96 /* PickPlaceLocation.swift in Sources */,
 				F94F648228168D9200FD8303 /* CustomTabBar.swift in Sources */,
 				F94F64882816B0FC00FD8303 /* ViewThree.swift in Sources */,
 				F9887D0628461CEE00A25A96 /* LocationFormatter.swift in Sources */,

@@ -92,7 +92,7 @@ struct ViewThree: View {
                         .frame(height: 124)
                         .background(Color("PageIndicatorBackground"))
                         .cornerRadius(16)
-                        .padding(.horizontal)
+                        .padding(.horizontal, 16)
                     }
                 }
                 
@@ -103,57 +103,21 @@ struct ViewThree: View {
 
 }
 
-class MapViewModel: ObservableObject{
+class MapViewModel: NSObject, CLLocationManagerDelegate, ObservableObject{
     //All the variables live here
     @Published  var addressLabel: String = ""
     @Published var centerCoordinate: CLLocationCoordinate2D = CLLocationCoordinate2D()
     
-    @Published var currentLocation: CLLocationCoordinate2D? = nil
-    @Published var withAnnotation: MKPointAnnotation? = nil
-    @Published var annotation: MKPointAnnotation?
-    //This tuple variable allows you to have a dynamic alert in the view
-    @Published var errorAlert: (isPresented: Bool, error: MapErrors, defaultAction: (() -> Void)?, cancelAction: (() -> Void)?) = (false, MapErrors.unknown, nil, nil)
-    //The new alert requires a LocalizedError
-    enum MapErrors: LocalizedStringKey, LocalizedError{
-        case unknown
-        case failedToRetrievePlacemark
-        case failedToReverseGeocode
-        case randomForTestPurposes
-        //Add localizable.strings to you project and add these keys so you get localized messages
-        var errorDescription: String?{
-            switch self{
-                
-            case .unknown:
-                return "unknown".localizedCapitalized
-            case .failedToRetrievePlacemark:
-                return "failedToRetrievePlacemark".localizedCapitalized
-                
-            case .failedToReverseGeocode:
-                return "failedToReverseGeocode".localizedCapitalized
-                
-            case .randomForTestPurposes:
-                return "randomForTestPurposes".localizedCapitalized
-                
-            }
-        }
-    }
-    //Presenting with this will ensure that errors keep from gettting lost by creating a loop until they can be presented
-    func presentError(isPresented: Bool, error: MapErrors, defaultAction: (() -> Void)?, cancelAction: (() -> Void)?, count: Int = 1){
-        //If there is an alert already showing
-        if errorAlert.isPresented{
-            //See if the current error has been on screen for 10 seconds
-            if count >= 10{
-                //If it has dismiss it so the new error can be posted
-                errorAlert.isPresented = false
-            }
-            //Call the method again in 1 second
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                let newCount = count + 1
-                self.presentError(isPresented: isPresented, error: error, defaultAction: defaultAction, cancelAction: cancelAction, count: newCount)
-            }
-        }else{
-            errorAlert = (isPresented, error, defaultAction, cancelAction)
-        }
+    @Published var currentLocation = MKCoordinateRegion()
+    @Published var manager = CLLocationManager()
+    
+    override init() {
+        super.init()
+        manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.requestWhenInUseAuthorization()
+        currentLocation = .init(center: .init(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!), span: .init(latitudeDelta: 0.004, longitudeDelta: 0.004))
+        manager.startUpdatingLocation()
     }
     
 }
@@ -169,18 +133,13 @@ struct MapView: UIViewRepresentable {
         }
         
         func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
-            print("hehe")
-//            if !mapView.showsUserLocation {
-//                print("show userLocation")
-//                parent.vm.centerCoordinate = mapView.centerCoordinate
-//            }
+//            print("\(mapView.centerCoordinate.latitude), \(mapView.centerCoordinate.longitude)")
             parent.vm.centerCoordinate = mapView.centerCoordinate
         }
         
         
         func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool){
             getAddress(center: mapView.centerCoordinate)
-//            print("333")
         }
         //Gets the addess from CLGeocoder if available
         func getAddress(center: CLLocationCoordinate2D){
@@ -192,13 +151,11 @@ struct MapView: UIViewRepresentable {
                 if let _ = error {
                     //TODO: Show alert informing the user
                     print("error")
-                    self.parent.vm.presentError(isPresented: true, error: MapViewModel.MapErrors.failedToReverseGeocode, defaultAction: nil, cancelAction: nil)
                     return
                 }
                 
                 guard let placemark = placemarks?.first else {
                     //TODO: Show alert informing the user
-                    self.parent.vm.presentError(isPresented: true, error: MapViewModel.MapErrors.failedToRetrievePlacemark, defaultAction: nil, cancelAction: nil)
                     return
                 }
                 let city = placemark.locality ?? ""
@@ -208,7 +165,6 @@ struct MapView: UIViewRepresentable {
                 DispatchQueue.main.async {
                     self.parent.vm.addressLabel =  String("\(streetName), \(streetNumber), \(city)")
                     print(self.parent.vm.addressLabel)
-                    
                 }
             }
         }
@@ -221,24 +177,11 @@ struct MapView: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
-//        mapView.showsUserLocation = true
+        mapView.region = vm.currentLocation
         return mapView
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        print("1")
-        if let currentLocation = vm.currentLocation {
-            print("2")
-            if let annotation = vm.withAnnotation {
-                uiView.removeAnnotation(annotation)
-            }
-            uiView.showsUserLocation = true
-            let region = MKCoordinateRegion(center: currentLocation,span: .init(latitudeDelta: 0.006, longitudeDelta: 0.006))
-            uiView.setRegion(region, animated: true)
-        } else if let annotation = vm.withAnnotation {
-            print("3")
-            uiView.removeAnnotations(uiView.annotations)
-            uiView.addAnnotation(annotation)
-        }
+
     }
 }

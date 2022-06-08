@@ -13,7 +13,7 @@ import CoreLocation
 
 struct ViewThree: View {
     @State var openMapView = false
-    @State var coordinates: CLLocation? = nil
+    @State var coordinates: CLLocationCoordinate2D? = nil
     @StateObject var manager = LocationManager()
     @State var street = ""
     @State var annotationItem = ""
@@ -25,9 +25,58 @@ struct ViewThree: View {
 
         func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
             getAddressFromLatLon(pdblLatitude: mapView.region.center.latitude.description, withLongitude: mapView.region.center.longitude.description)
-//            print(street)
+            print("street: \(street)")
         }
         
+        func getAddressFromLatLon(pdblLatitude: String, withLongitude pdblLongitude: String) {
+            var center : CLLocationCoordinate2D = CLLocationCoordinate2D()
+            let lat: Double = Double("\(pdblLatitude)")!
+            //21.228124
+            let lon: Double = Double("\(pdblLongitude)")!
+            //72.833770
+            let ceo: CLGeocoder = CLGeocoder()
+            center.latitude = lat
+            center.longitude = lon
+            
+            let loc: CLLocation = CLLocation(latitude:center.latitude, longitude: center.longitude)
+    //            var streetName = ""
+            
+            ceo.reverseGeocodeLocation(loc, completionHandler:
+                                        { [self](placemarks, error) in
+                if (error != nil)
+                {
+                    print("reverse geodcode fail: \(error!.localizedDescription)")
+                }
+                let pm = placemarks! as [CLPlacemark]
+                
+                if pm.count > 0 {
+                    let pm = placemarks![0]
+    //                    print(pm.country, "1")
+    //                    print(pm.locality, "2")
+    //                    print(pm.subLocality, "3")
+    //                    print(pm.thoroughfare, "4")
+    //                    print(pm.postalCode, "5")
+    //                    print(pm.subThoroughfare, "6")
+                    var addressString : String = ""
+                    if pm.subLocality != nil {
+                        addressString = addressString + pm.subLocality! + ", "
+                    }
+                    if pm.thoroughfare != nil {
+                        addressString = addressString + pm.thoroughfare! + ", "
+                    }
+                    if pm.locality != nil {
+                        addressString = addressString + pm.locality! + ", "
+                    }
+                    if pm.country != nil {
+                        addressString = addressString + pm.country! + ", "
+                    }
+                    if pm.postalCode != nil {
+                        addressString = addressString + pm.postalCode! + " "
+                    }
+                    street = addressString
+                }
+            })
+        }
 
     }
     
@@ -46,7 +95,11 @@ struct ViewThree: View {
             } label: {
                 if !delegate.street.isEmpty {
 //                    Text("\(coordinates.coordinate.latitude), \(coordinates.coordinate.longitude)")
-                    Text(delegate.street)
+                    VStack {
+                        Text(delegate.street)
+                        Text("\(coordinates?.latitude ?? 2) \(coordinates?.longitude ?? 2)")
+                    }
+                    
                 } else {
                     Text("set location")
                 }
@@ -54,11 +107,7 @@ struct ViewThree: View {
             
             .fullScreenCover(isPresented: $openMapView) {
                 ZStack {
-                    MapSearchView(region: $manager.region).ignoresSafeArea()
-//                    Map(coordinateRegion: $manager.region).ignoresSafeArea()
-//                        .onChange(of: manager.region.center.latitude) { newValue in
-//                            print("1")
-//                        }
+                    MapView(coordinates: $coordinates, region: $manager.region).ignoresSafeArea()
                     Image("Vector")
                         .resizable()
                         .scaledToFit()
@@ -114,56 +163,6 @@ struct ViewThree: View {
         }
     }
     
-    static func getAddressFromLatLon(pdblLatitude: String, withLongitude pdblLongitude: String) {
-        var center : CLLocationCoordinate2D = CLLocationCoordinate2D()
-        let lat: Double = Double("\(pdblLatitude)")!
-        //21.228124
-        let lon: Double = Double("\(pdblLongitude)")!
-        //72.833770
-        let ceo: CLGeocoder = CLGeocoder()
-        center.latitude = lat
-        center.longitude = lon
-        
-        let loc: CLLocation = CLLocation(latitude:center.latitude, longitude: center.longitude)
-//            var streetName = ""
-        
-        ceo.reverseGeocodeLocation(loc, completionHandler:
-                                    { [self](placemarks, error) in
-            if (error != nil)
-            {
-                print("reverse geodcode fail: \(error!.localizedDescription)")
-            }
-            let pm = placemarks! as [CLPlacemark]
-            
-            if pm.count > 0 {
-                let pm = placemarks![0]
-//                    print(pm.country, "1")
-//                    print(pm.locality, "2")
-//                    print(pm.subLocality, "3")
-//                    print(pm.thoroughfare, "4")
-//                    print(pm.postalCode, "5")
-//                    print(pm.subThoroughfare, "6")
-                var addressString : String = ""
-                if pm.subLocality != nil {
-                    addressString = addressString + pm.subLocality! + ", "
-                }
-                if pm.thoroughfare != nil {
-                    addressString = addressString + pm.thoroughfare! + ", "
-                }
-                if pm.locality != nil {
-                    addressString = addressString + pm.locality! + ", "
-                }
-                if pm.country != nil {
-                    addressString = addressString + pm.country! + ", "
-                }
-                if pm.postalCode != nil {
-                    addressString = addressString + pm.postalCode! + " "
-                }
-                street = addressString
-//                    print(addressString)
-            }
-        })
-    }
 
 }
 
@@ -178,10 +177,13 @@ class LocationManager: NSObject,CLLocationManagerDelegate, ObservableObject {
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.requestWhenInUseAuthorization()
         manager.startUpdatingLocation()
-        region.center = manager.location!.coordinate
-        region.span = .init(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: manager.location?.coordinate.latitude ?? 0, longitude: manager.location?.coordinate.longitude ?? 0),
+            span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
+        )
+//        region.span = .init(latitudeDelta: 0.05, longitudeDelta: 0.05)
     }
-    
+     
     func heh() {
         //        print(manager.location!.coordinate.latitude, manager.location!.coordinate.longitude)
         region = MKCoordinateRegion(
@@ -191,65 +193,34 @@ class LocationManager: NSObject,CLLocationManagerDelegate, ObservableObject {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        //            locations.last.map {
-        //                print($0.coordinate.latitude, $0.coordinate.longitude)
-        //                region = MKCoordinateRegion(
-        //                    center: CLLocationCoordinate2D(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude),
-        //                    span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
-        //                )
-        //            }
+        locations.last.map {
+            print($0.coordinate.latitude, $0.coordinate.longitude)
+            region = MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude),
+                span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
+            )
+        }
     }
     
 }
 
-//struct ViewThree_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ViewThree()
-//    }
-//}
-
-class MapViewController: UIViewController, MKMapViewDelegate {
-        
-    var mapView: MKMapView!
-    var region: MKCoordinateRegion!
-    // MARK: - UIViewController's methods
-//    var horizontalSta
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        mapView = MKMapView()
-
-        let mapWidth:CGFloat = view.frame.size.width
-        let mapHeight:CGFloat = view.frame.size.height
-        
-        mapView.frame = CGRect(x: 0, y: 0, width: mapWidth, height: mapHeight)
-//        mapView.isZoomEnabled = true
-        mapView.isScrollEnabled = true
-        self.view.addSubview(mapView)
-        mapView.region = region
-        mapView.mapType = .standard
-//        mapView.showsUserLocation = true
-        
-    }
+struct MapView: UIViewRepresentable {
     
-    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        print("heh2")
-    }
-}
-
-
-
-struct MapSearchView: UIViewControllerRepresentable {
-    
+    typealias UIViewType = MKMapView
+    @Binding var coordinates: CLLocationCoordinate2D?
     @Binding var region: MKCoordinateRegion
+//    @Binding var street: String
+    
+    func makeUIView(context: Context) -> MKMapView {
+        let mapView = MKMapView()
+        mapView.setRegion(region, animated: true)
+        return mapView
+    }
+    
+    func updateUIView(_ uiView: MKMapView, context: Context) {
+//        region = uiView.region
+//        uiView.region = region
+        coordinates = .init(latitude: uiView.region.center.latitude, longitude:  uiView.region.center.longitude)
+    }
 
-    func makeUIViewController(context: UIViewControllerRepresentableContext<MapSearchView>) -> MapViewController {
-        let mapController = MapViewController()
-        mapController.region = region
-        return mapController
-    }
-    func updateUIViewController(_ uiViewController: MapViewController,
-                                context: UIViewControllerRepresentableContext<MapSearchView>) {
-            uiViewController.mapView.region = region
-    }
 }

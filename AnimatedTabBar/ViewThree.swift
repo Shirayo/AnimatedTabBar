@@ -44,7 +44,7 @@ struct ViewThree: View {
             
             .fullScreenCover(isPresented: $openMapView) {
                 ZStack {
-                    MapView(vm: vm).ignoresSafeArea()
+                    MapView(vm: vm, coordinates: $coordinates).ignoresSafeArea()
                     Image("Vector")
                         .resizable()
                         .scaledToFit()
@@ -122,6 +122,7 @@ class MapViewModel: NSObject, CLLocationManagerDelegate, ObservableObject{
 
 struct MapView: UIViewRepresentable {
     @ObservedObject var vm: MapViewModel
+    @Binding var coordinates: CLLocationCoordinate2D?
     
     class Coordinator: NSObject, MKMapViewDelegate {
         var parent: MapView
@@ -175,7 +176,7 @@ struct MapView: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
-        mapView.region = vm.currentLocation
+        mapView.region = MKCoordinateRegion(center: coordinates ?? vm.currentLocation.center, span: .init(latitudeDelta: 0.005, longitudeDelta: 0.005))
         return mapView
     }
     

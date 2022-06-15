@@ -20,10 +20,8 @@ struct ViewThree: View {
     @State var annotationItem = ""
 
     init() {
-        
         MKMapView.appearance().mapType = .standard
         MKMapView.appearance().showsUserLocation = true
-//        MKMapView.appearance().delegate = delegate
     }
     
     var body: some View {
